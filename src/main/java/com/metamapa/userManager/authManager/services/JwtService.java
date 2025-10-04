@@ -23,7 +23,7 @@ private Duration expiration;
 private Duration refreshExpiration;
   private String buildToken(User user, Long expiration) {
     return Jwts.builder()
-        .claims( Map.of("name", user.getName(), "username", user.getUsername()))
+        .claims( Map.of( "username", user.getUsername()))
         .subject(user.getUsername())
         .expiration(new Date(System.currentTimeMillis() + expiration))
         .signWith(getKey(), Jwts.SIG.HS256)

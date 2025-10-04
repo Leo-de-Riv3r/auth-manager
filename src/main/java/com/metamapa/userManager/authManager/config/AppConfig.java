@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,7 +35,9 @@ public class AppConfig {
       return org.springframework.security.core.userdetails.User.builder()
           .username(user.getUsername())
           .password(user.getPasswordHash())
-          .authorities("ROLE_USER")
+          .authorities(user.getRol().getPermisos().stream()
+              .map(Enum::toString) // ejemplo
+              .toArray(String[]::new))
           .build();
     };
   }

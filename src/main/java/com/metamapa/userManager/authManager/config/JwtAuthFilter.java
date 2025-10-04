@@ -35,6 +35,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain
   ) throws ServletException, IOException {
+    String path = request.getServletPath();
+
+    // 🔹 Solo analizar el token si la ruta es /auth/login o /auth/refresh
+
+
+    if (request.getServletPath().equals("/auth/login") ||
+        request.getServletPath().equals("/auth/register")) {
+      filterChain.doFilter(request, response);
+      return;
+    }
 
     String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
