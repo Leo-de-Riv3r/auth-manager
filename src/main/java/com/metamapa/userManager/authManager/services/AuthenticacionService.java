@@ -9,10 +9,10 @@ import com.metamapa.userManager.authManager.models.entities.dto.NewUserDto;
 import com.metamapa.userManager.authManager.models.entities.dto.UserRolesAndAuthoritiesDto;
 import com.metamapa.userManager.authManager.models.entities.dto.UserTokensDto;
 import com.metamapa.userManager.authManager.models.repositories.UserRepository;
+import jakarta.persistence.EntityExistsException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +38,10 @@ public class AuthenticacionService implements IAuthenticationService{
 
   @Override
   public UserTokensDto register(NewUserDto request) {
+    Optional<User> userInDb = userRepository.findByUsername(request.getUsername());
+    if (userInDb.isPresent()) {
+      throw new EntityExistsException("Usuario ya existe en db");
+    }
     User user = User.builder()
         .username(request.getUsername())
         .passwordHash(passwordEncoder.encode(request.getPassword()))
@@ -89,7 +93,6 @@ public class AuthenticacionService implements IAuthenticationService{
     if (!jwtService.isTokenValid(tokenHeader.substring(7), user)) {
       throw new IllegalArgumentException("Token not valid, it's expired or incorrect");
     }
-
 
     return UserTokensDto.builder()
             .accessToken(jwtService.generateAccessToken(user))

@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
   private final JwtAuthFilter jwtAuthFilter;
   private final AuthenticationProvider authenticationProvider;
-
+  private final CustomAuthenticationEntryPoint customEntryPoint;
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
@@ -38,6 +38,9 @@ public class SecurityConfig {
             )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider)
+//        .exceptionHandling(ex -> ex
+//            .authenticationEntryPoint(customEntryPoint)
+//        )
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .logout(logout ->
             logout.logoutUrl("/auth/logout")

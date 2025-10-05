@@ -39,7 +39,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     // 🔹 Solo analizar el token si la ruta es /auth/login o /auth/refresh
 
-
     if (request.getServletPath().equals("/auth/login") ||
         request.getServletPath().equals("/auth/register")) {
       filterChain.doFilter(request, response);
@@ -48,6 +47,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      //throw new IllegalArgumentException("Token not valid, it's expired or incorrect");
       filterChain.doFilter(request, response);
       return;
     }

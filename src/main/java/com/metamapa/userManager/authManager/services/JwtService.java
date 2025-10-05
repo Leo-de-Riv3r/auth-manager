@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,8 @@ private Duration expiration;
 private Duration refreshExpiration;
   private String buildToken(User user, Long expiration) {
     return Jwts.builder()
-        .claims( Map.of( "username", user.getUsername()))
+        .claims( Map.of( "username", user.getUsername(),
+            "rol", user.getRol().getTiporol().toString()))
         .subject(user.getUsername())
         .expiration(new Date(System.currentTimeMillis() + expiration))
         .signWith(getKey(), Jwts.SIG.HS256)
