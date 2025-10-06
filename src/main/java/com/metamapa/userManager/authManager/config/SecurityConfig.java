@@ -38,9 +38,9 @@ public class SecurityConfig {
             )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider)
-//        .exceptionHandling(ex -> ex
-//            .authenticationEntryPoint(customEntryPoint)
-//        )
+        .exceptionHandling(ex -> ex
+            .authenticationEntryPoint(customEntryPoint)
+        )
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .logout(logout ->
             logout.logoutUrl("/auth/logout")

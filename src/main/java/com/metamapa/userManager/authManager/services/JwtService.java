@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
@@ -12,6 +13,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,12 +47,16 @@ private Duration refreshExpiration;
   }
 
   public String extractUsername(String token) {
-    Claims jwtToken = Jwts.parser()
-        .verifyWith(getKey())
-        .build()
-        .parseSignedClaims(token)
-        .getPayload();
-    return jwtToken.getSubject();
+    try {
+      Claims jwtToken = Jwts.parser()
+          .verifyWith(getKey())
+          .build()
+          .parseSignedClaims(token)
+          .getPayload();
+      return jwtToken.getSubject();
+    } catch (Exception e) {
+      throw new InsufficientAuthenticationException("Token with invalid signature");
+    }
   }
 
   public Date extractExpiration(String token) {

@@ -47,7 +47,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-      //throw new IllegalArgumentException("Token not valid, it's expired or incorrect");
+      //throw new IllegalArgumentException("Token not provided");
       filterChain.doFilter(request, response);
       return;
     }

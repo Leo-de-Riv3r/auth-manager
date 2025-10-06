@@ -1,14 +1,11 @@
 package com.metamapa.userManager.authManager.exceptions;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
-import java.time.Instant;
+import java.security.SignatureException;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -25,19 +22,19 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(EntityExistsException.class)
-  public ResponseEntity<String> handleUsernameNotFound(EntityExistsException ex) {
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+  public ResponseEntity<Map<String, String>> handleDuplicatedUsername(EntityExistsException ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error",ex.getMessage()));
   }
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-        Map.of(
-            "timestamp", Instant.now(),
-            "status", HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            "error", "Error interno",
-            "message", ex.getMessage()
-        )
-    );
-  }
+//  @ExceptionHandler(Exception.class)
+//  public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
+//    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+//        Map.of(
+//            "timestamp", new Date(),
+//            "status", HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//            "error", "Error de autenticacion",
+//            "message", ex.getMessage()
+//        )
+//    );
+//  }
 }

@@ -40,7 +40,7 @@ public class AuthenticacionService implements IAuthenticationService{
   public UserTokensDto register(NewUserDto request) {
     Optional<User> userInDb = userRepository.findByUsername(request.getUsername());
     if (userInDb.isPresent()) {
-      throw new EntityExistsException("Usuario ya existe en db");
+      throw new EntityExistsException("User with same username already exists");
     }
     User user = User.builder()
         .username(request.getUsername())
