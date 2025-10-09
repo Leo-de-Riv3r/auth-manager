@@ -21,4 +21,9 @@ enum TipoRol {
   CONTRIBUYENTE,
   ADMINISTRADOR
 }
+
+User -> "1" Rol
+
+Rol -> " * "TipoRol
+Rol -> " * "Permiso
 @enduml
